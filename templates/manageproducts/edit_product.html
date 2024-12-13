@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include 'partials/back_button.html' %}
+<div class="container mt-4">
+    <h2>Modifier l'Article : {{ product.name }}</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+        <a href="{% url 'shopView' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

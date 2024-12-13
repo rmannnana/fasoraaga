@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Titre principal -->
+    <h1 class="text-center">Bienvenue sur Faso Raaga</h1>
+    
+    <!-- Sous-titre -->
+    <p class="text-center text-muted">Retrouvez ici les producteurs locaux du Burkina Faso.</p>
+    
+    <!-- Galerie horizontale auto-défilante (Carrousel) -->
+    <div id="galleryCarousel" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="d-flex">
+                    <img src="{% static 'img/gallery1.jpg' %}" class="d-block w-100 gallery-img" alt="Image 1">
+                    <img src="{% static 'img/gallery2.jpg' %}" class="d-block w-100 gallery-img" alt="Image 2">
+                    <img src="{% static 'img/gallery3.jpg' %}" class="d-block w-100 gallery-img" alt="Image 3">
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex">
+                    <img src="{% static 'img/gallery4.jpg' %}" class="d-block w-100 gallery-img" alt="Image 4">
+                    <img src="{% static 'img/gallery5.jpg' %}" class="d-block w-100 gallery-img" alt="Image 5">
+                    <img src="{% static 'img/gallery6.jpg' %}" class="d-block w-100 gallery-img" alt="Image 6">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contrôles pour naviguer dans la galerie -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+    
+    <!-- Citation de Thomas Sankara -->
+    <blockquote class="text-center mt-4">
+        <p class="font-italic font-weight-bold">"Consommons ce que nous produisons, produisons ce que nous consommons." <b>– Thomas Sankara</b></p>
+    </blockquote>
+
+    <!-- Bouton pour rediriger vers la marketplace -->
+    <div class="text-center mt-5">
+        <a href="{% url 'marketplace' %}" class="btn btn-primary btn-lg">Explorer la Marketplace</a>
+    </div>
+</div>
+
+<!-- CSS personnalisé pour ajuster la taille de la galerie -->
+<style>
+    .gallery-img {
+        height: 400px; /* Ajuster la hauteur pour rendre la galerie plus petite */
+        object-fit: cover; /* S'assurer que l'image reste bien cadrée */
+        width: 33.33%; /* Affiche 3 images côte à côte */
+    }
+
+    @media (max-width: 767px) {
+        .gallery-img {
+            width: 100%; /* Affiche une image sur les petits écrans */
+        }
+    }
+</style>
+{% endblock %}

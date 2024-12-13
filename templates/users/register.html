@@ -1,0 +1,24 @@
+{% extends 'base/base2.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center">Inscription</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>Déjà inscrit ? <a href="{% url 'login' %}">Se connecter</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

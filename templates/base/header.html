@@ -1,0 +1,33 @@
+{% load static %}
+
+<header>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'img/logo_faso_raaga.png' %}" alt="Logo" width="30" height="24" class="img-thumbnail">
+                Faso Raaga
+            </a>
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    {% if user.haveShop %}
+                        <a class="nav-link" href="{% url 'shopView' %}">Ma Boutique</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'create_shop' %}">Créer une Boutique</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'view_cart' %}">Mon Panier</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'myaccount' %}">Mon compte</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

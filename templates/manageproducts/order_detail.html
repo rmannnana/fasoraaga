@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+{% load cart_extras %} <!-- Charger le filtre personnalisé -->
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Détails de la Commande #{{ order.id }}</h2>
+    <p><strong>Client :</strong> {{ order.user.firstname }} {{ order.user.lastname }}</p>
+    <p><strong>Téléphone :</strong> <a href="tel:{{ order.user.telephone }}">{{ order.user.telephone }}</a></p>
+    <p><strong>Date de Commande :</strong> {{ order.created_at }}</p>
+    <p><strong>Status :</strong> {{ order.status }}</p>
+
+    <h4>Articles Commandés</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }} FCFA</td>
+                <td>{{ item.quantity|multiply:item.price }} FCFA</td> <!-- Utiliser le filtre personnalisé -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="validate_order" class="btn btn-success">Marquer Comme Validée</button>
+    </form>
+    <a href="{% url 'view_orders' %}" class="btn btn-secondary mt-2">Retour aux Commandes</a>
+</div>
+{% endblock %}

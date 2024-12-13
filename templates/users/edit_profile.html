@@ -1,0 +1,13 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% include 'partials/back_button.html' %}
+<div class="container mt-4">
+    <h2>Modifier mes Informations</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Affichage du formulaire -->
+        <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+    </form>
+</div>
+{% endblock %}

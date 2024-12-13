@@ -1,0 +1,31 @@
+{% extends 'base/base2.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center">Connexion</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" name="telephone" class="form-control" placeholder="Numéro de téléphone" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control" placeholder="Mot de passe" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                    </form>
+                    {% if error %}
+                        <p class="text-danger text-center mt-3">{{ error }}</p>
+                    {% endif %}
+                    <div class="text-center mt-3">
+                        <p>Pas encore de compte ? <a href="{% url 'register' %}">S'inscrire</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

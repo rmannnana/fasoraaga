@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+{% load cart_extras %} <!-- Charger le filtre personnalisé -->
+
+{% block content %}
+{% include 'partials/back_button.html' %}
+<div class="container mt-4">
+    <h2>Votre Panier</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>
+                    <form method="POST" action="{% url 'update_quantity' item.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control" style="width: 70px; display: inline;">
+                        <button type="submit" class="btn btn-sm btn-primary">Mettre à jour</button>
+                    </form>
+                </td>
+                <td>{{ item.product.price }} FCFA</td>
+                <td>{{ item.product.price|multiply:item.quantity }} FCFA</td> <!-- Utiliser le filtre personnalisé -->
+                <td>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Votre panier est vide.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bouton pour valider le panier -->
+    {% if cart_items %}
+        <div class="text-right">
+            <a href="#" onclick="confirmCart()" class="btn btn-success">Valider le Panier</a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    function confirmCart() {
+        if (confirm("Confirmez-vous la validation de votre panier ?")) {
+            // Afficher le message d'information
+            alert("Merci pour votre commande ! Les boutiques concernées vous contacteront sous peu.");
+            
+            // Redirection vers la validation du panier
+            window.location.href = "{% url 'validate_cart' %}";
+        }
+    }
+</script>
+{% endblock %}

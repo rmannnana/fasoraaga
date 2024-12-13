@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Mon Compte</h1>
+    
+    <div class="list-group">
+        {% if user.haveShop %}
+            <a href="{% url 'shopView' %}" class="list-group-item list-group-item-action">Ma Boutique</a>
+        {% else %}
+            <a href="{% url 'create_shop' %}" class="list-group-item list-group-item-action">Créer une Boutique</a>
+        {% endif %}
+        <a href="{% url 'edit_profile' %}" class="list-group-item list-group-item-action">Modifier mes Informations</a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="confirmLogout()">Me Déconnecter</a>
+    </div>
+</div>
+
+<script>
+    function confirmLogout() {
+        if (confirm("Voulez-vous vraiment vous déconnecter ?")) {
+            window.location.href = "{% url 'logout' %}";
+        }
+    }
+</script>
+{% endblock %}
