@@ -49,7 +49,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password")
         email = validated_data["email"].lower()
         username = email
-        user = User(username=username, email=email, **validated_data)
+        validated_data["email"] = email  # normaliser l'email en minuscule
+        user = User(username=username, **validated_data)  # ← supprimer email=email
         user.set_password(password)
         user.save()
         return user

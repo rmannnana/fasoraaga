@@ -1,7 +1,7 @@
-import { LucideIcon } from 'lucide-react'
+import { type FC } from 'react'
 
 interface EmptyStateProps {
-    icon: LucideIcon
+    icon: FC<{ size?: number; className?: string }>
     title: string
     description: string
     action?: {
