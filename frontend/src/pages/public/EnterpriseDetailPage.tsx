@@ -16,6 +16,7 @@ export default function EnterpriseDetailPage() {
 
     const entrepriseQuery = useEntreprise(Number(id))
     const productsQuery = useEntrepriseProducts(Number(id))
+    const addFavorite = useAddFavorite()
 
     if (entrepriseQuery.isLoading) {
         return (
@@ -42,7 +43,6 @@ export default function EnterpriseDetailPage() {
 
     const e = entrepriseQuery.data
     const products = productsQuery.data?.results ?? []
-    const addFavorite = useAddFavorite()
     return (
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 

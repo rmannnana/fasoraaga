@@ -21,6 +21,7 @@ export default function ProductDetailPage() {
     const { isAuthenticated } = useAuthStore()
 
     const productQuery = useProduct(Number(id))
+    const addFavorite = useAddFavorite()
 
     if (productQuery.isLoading) {
         return (
@@ -49,7 +50,6 @@ export default function ProductDetailPage() {
     const { label, color } = statusConfig[p.status]
     const price = parseFloat(p.indicative_price)
     const firstImage = p.images?.[0]?.image ?? null
-    const addFavorite = useAddFavorite()
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">

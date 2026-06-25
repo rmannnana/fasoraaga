@@ -21,8 +21,8 @@ export default function FavoritesPage() {
     const removeFavorite = useRemoveFavorite()
 
     const favorites = favoritesQuery.data?.results ?? []
-    const enterpriseFavorites = favorites.filter((f) => f.enterprise !== null && f.enterprise !== undefined)
-    const productFavorites = favorites.filter((f) => f.product !== null && f.product !== undefined)
+    const enterpriseFavorites = favorites.filter((f) => f.enterprise_detail !== null && f.enterprise_detail !== undefined)
+    const productFavorites = favorites.filter((f) => f.product_detail !== null && f.product_detail !== undefined)
 
     const activeList = tab === 'enterprises' ? enterpriseFavorites : productFavorites
 
@@ -48,8 +48,8 @@ export default function FavoritesPage() {
                         key={key}
                         onClick={() => setTab(key)}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-colors ${tab === key
-                                ? 'bg-white text-green-700 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700'
+                            ? 'bg-white text-green-700 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
                             }`}
                     >
                         <Icon size={15} />
@@ -88,7 +88,8 @@ export default function FavoritesPage() {
             ) : tab === 'enterprises' ? (
                 <div className="space-y-3">
                     {enterpriseFavorites.map((fav) => {
-                        const e = fav.enterprise!
+                        console.log('fav:', fav)
+                        const e = fav.enterprise_detail!
                         return (
                             <div
                                 key={fav.id}
@@ -144,7 +145,7 @@ export default function FavoritesPage() {
             ) : (
                 <div className="space-y-3">
                     {productFavorites.map((fav) => {
-                        const p = fav.product!
+                        const p = fav.product_detail!
                         const { label, color } = statusConfig[p.status]
                         const image = p.images?.[0]?.image ?? null
 

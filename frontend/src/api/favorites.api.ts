@@ -1,26 +1,33 @@
 import axiosInstance from './axiosInstance'
 import type { PaginatedResponse } from '../types/api.types'
 
+export interface EnterpriseDetail {
+    id: number
+    name: string
+    description: string
+    logo: string | null
+    region: string
+}
+
+export interface ProductDetail {
+    id: number
+    name: string
+    indicative_price: string
+    unit: string
+    images: { id: number; image: string; alt_text: string }[]
+    status: 'disponible' | 'sur_commande' | 'indisponible'
+    enterprise_name: string
+    region: string
+    category_name: string
+}
+
 export interface Favorite {
     id: number
-    enterprise?: {
-        id: number
-        name: string
-        description: string
-        logo: string | null
-        region: string
-    } | null
-    product?: {
-        id: number
-        name: string
-        indicative_price: string
-        unit: string
-        images: { id: number; image: string; alt_text: string }[]
-        status: 'disponible' | 'sur_commande' | 'indisponible'
-        enterprise_name: string
-        region: string
-        category_name: string
-    } | null
+    user: number
+    enterprise: number | null
+    product: number | null
+    enterprise_detail: EnterpriseDetail | null
+    product_detail: ProductDetail | null
     created_at: string
 }
 
