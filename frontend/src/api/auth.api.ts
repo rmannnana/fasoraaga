@@ -17,6 +17,25 @@ export const authApi = {
         return data
     },
 
+    updateProfile: async (payload: Partial<{
+        first_name: string
+        last_name: string
+        phone: string
+        bio: string
+    }>): Promise<User> => {
+        const { data } = await axiosInstance.patch('/profile/', payload)
+        return data
+    },
+
+    updateProfilePicture: async (file: File): Promise<User> => {
+        const formData = new FormData()
+        formData.append('profile_picture', file)
+        const { data } = await axiosInstance.patch('/profile/', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        return data
+    },
+
     logout: async (refreshToken: string): Promise<void> => {
         await axiosInstance.post('/auth/token/blacklist/', { refresh: refreshToken })
     },

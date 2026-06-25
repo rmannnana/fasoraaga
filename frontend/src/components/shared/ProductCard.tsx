@@ -1,6 +1,9 @@
 import { Heart, MapPin } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Badge from '../ui/Badge'
+import { useAuthStore } from '../../features/auth/store/authStore'
+import { useAddFavorite } from '../../features/favorites/hooks/useFavorites'
+import { toast } from 'sonner'
 
 interface ProductCardProps {
     id: number
@@ -25,9 +28,23 @@ export default function ProductCard({
     image, entreprise, localisation, category, status
 }: ProductCardProps) {
     const { label, color } = statusConfig[status]
+    const { isAuthenticated } = useAuthStore()
+    const addFavorite = useAddFavorite()
+    const navigate = useNavigate()
+
     const price = typeof indicative_price === 'string'
         ? parseFloat(indicative_price)
         : indicative_price
+
+    const handleFavorite = (e: React.MouseEvent) => {
+        e.preventDefault()
+        if (!isAuthenticated) {
+            toast.error('Connectez-vous pour ajouter aux favoris.')
+            navigate('/auth')
+            return
+        }
+        addFavorite.mutate({ type: 'product', id })
+    }
 
     return (
         <Link to={`/products/${id}`} className="block group">
@@ -41,7 +58,8 @@ export default function ProductCard({
                         </div>
                     )}
                     <button
-                        onClick={(e) => e.preventDefault()}
+                        onClick={handleFavorite}
+                        disabled={addFavorite.isPending}
                         className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow hover:text-red-500 transition-colors"
                     >
                         <Heart size={16} className="text-gray-400" />

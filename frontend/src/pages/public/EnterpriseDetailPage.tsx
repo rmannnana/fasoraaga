@@ -7,6 +7,7 @@ import { useEntreprise, useEntrepriseProducts } from '../../features/enterprises
 import ProductCard from '../../components/shared/ProductCard'
 import EmptyState from '../../components/shared/EmptyState'
 import { useAuthStore } from '../../features/auth/store/authStore'
+import { useAddFavorite } from '../../features/favorites/hooks/useFavorites'
 
 export default function EnterpriseDetailPage() {
     const { id } = useParams()
@@ -41,7 +42,7 @@ export default function EnterpriseDetailPage() {
 
     const e = entrepriseQuery.data
     const products = productsQuery.data?.results ?? []
-
+    const addFavorite = useAddFavorite()
     return (
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
@@ -77,7 +78,13 @@ export default function EnterpriseDetailPage() {
                     </div>
 
                     {/* Bouton favori */}
-                    <button className="p-2 hover:text-red-500 transition-colors">
+                    <button
+                        onClick={() => isAuthenticated
+                            ? addFavorite.mutate({ type: 'enterprise', id: Number(id) })
+                            : navigate('/auth')
+                        }
+                        className="p-2 hover:text-red-500 transition-colors"
+                    >
                         <Heart size={20} className="text-gray-300" />
                     </button>
                 </div>
@@ -91,7 +98,13 @@ export default function EnterpriseDetailPage() {
                         <MessageCircle size={16} />
                         Demander un contact
                     </button>
-                    <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 rounded-xl text-sm text-gray-600 transition-colors">
+                    <button
+                        onClick={() => isAuthenticated
+                            ? addFavorite.mutate({ type: 'enterprise', id: Number(id) })
+                            : navigate('/auth')
+                        }
+                        className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 hover:bg-gray-50 rounded-xl text-sm text-gray-600 transition-colors"
+                    >
                         <Heart size={16} />
                         Favori
                     </button>

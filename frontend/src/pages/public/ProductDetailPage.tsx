@@ -7,6 +7,7 @@ import { useProduct } from '../../features/products/hooks/useProduct'
 import EmptyState from '../../components/shared/EmptyState'
 import Badge from '../../components/ui/Badge'
 import { useAuthStore } from '../../features/auth/store/authStore'
+import { useAddFavorite } from '../../features/favorites/hooks/useFavorites'
 
 const statusConfig = {
     disponible: { label: 'Disponible', color: 'green' as const, icon: CheckCircle },
@@ -48,6 +49,7 @@ export default function ProductDetailPage() {
     const { label, color } = statusConfig[p.status]
     const price = parseFloat(p.indicative_price)
     const firstImage = p.images?.[0]?.image ?? null
+    const addFavorite = useAddFavorite()
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
@@ -71,7 +73,6 @@ export default function ProductDetailPage() {
                     </div>
                 )}
             </div>
-
             {/* Infos principales */}
             <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4">
                 <div className="flex items-start justify-between gap-3">
@@ -82,7 +83,13 @@ export default function ProductDetailPage() {
                             <span className="text-sm font-normal text-gray-400"> / {p.unit}</span>
                         </p>
                     </div>
-                    <button className="p-2 hover:text-red-500 transition-colors shrink-0">
+                    <button
+                        onClick={() => isAuthenticated
+                            ? addFavorite.mutate({ type: 'product', id: Number(id) })
+                            : navigate('/auth')
+                        }
+                        className="p-2 hover:text-red-500 transition-colors shrink-0"
+                    >
                         <Heart size={20} className="text-gray-300" />
                     </button>
                 </div>
