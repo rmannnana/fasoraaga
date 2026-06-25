@@ -1,13 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import {
     MapPin, Phone, Mail, Globe, Heart,
-    ArrowLeft, MessageCircle, Package
+    ArrowLeft, MessageCircle, Package, X, Loader2
 } from 'lucide-react'
 import { useEntreprise, useEntrepriseProducts } from '../../features/enterprises/hooks/useEntreprise'
 import ProductCard from '../../components/shared/ProductCard'
 import EmptyState from '../../components/shared/EmptyState'
 import { useAuthStore } from '../../features/auth/store/authStore'
 import { useAddFavorite } from '../../features/favorites/hooks/useFavorites'
+import { useState } from 'react'
+import { useSendContactRequest } from '../../features/contacts/hooks/useContacts'
 
 export default function EnterpriseDetailPage() {
     const { id } = useParams()
@@ -17,6 +19,10 @@ export default function EnterpriseDetailPage() {
     const entrepriseQuery = useEntreprise(Number(id))
     const productsQuery = useEntrepriseProducts(Number(id))
     const addFavorite = useAddFavorite()
+
+    const [contactModal, setContactModal] = useState(false)
+    const sendContact = useSendContactRequest()
+    const [contactMessage, setContactMessage] = useState('')
 
     if (entrepriseQuery.isLoading) {
         return (
@@ -92,7 +98,7 @@ export default function EnterpriseDetailPage() {
                 {/* Actions */}
                 <div className="flex gap-3 mt-5">
                     <button
-                        onClick={() => isAuthenticated ? null : navigate('/auth')}
+                        onClick={() => isAuthenticated ? setContactModal(true) : navigate('/auth')}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-700 hover:bg-green-800 text-white font-semibold rounded-xl text-sm transition-colors"
                     >
                         <MessageCircle size={16} />
@@ -193,6 +199,41 @@ export default function EnterpriseDetailPage() {
                 )}
             </div>
 
+            {contactModal && (
+                <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 px-0 md:px-4">
+                    <div className="bg-white w-full md:max-w-md rounded-t-2xl md:rounded-2xl p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h2 className="font-bold text-gray-800">Demande de contact</h2>
+                            <button onClick={() => setContactModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                                <X size={18} />
+                            </button>
+                        </div>
+                        <p className="text-sm text-gray-500">
+                            Envoyez un message d'introduction à <strong>{e.name}</strong>.
+                        </p>
+                        <textarea
+                            value={contactMessage}
+                            onChange={(ev) => setContactMessage(ev.target.value)}
+                            rows={4}
+                            placeholder="Bonjour, je souhaite établir un partenariat avec votre entreprise..."
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-600 text-sm outline-none resize-none"
+                        />
+                        <button
+                            onClick={() => {
+                                sendContact.mutate(
+                                    { receiver: Number(id), message: contactMessage },
+                                    { onSuccess: () => { setContactModal(false); setContactMessage('') } }
+                                )
+                            }}
+                            disabled={!contactMessage.trim() || sendContact.isPending}
+                            className="w-full py-3 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-white font-semibold rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+                        >
+                            {sendContact.isPending && <Loader2 size={16} className="animate-spin" />}
+                            Envoyer la demande
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

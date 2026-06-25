@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom'
 import {
     Home, Search, MessageCircle, Heart,
-    Building2, User, Bell, LogOut
+    Building2, User, Bell, LogOut, Package
 } from 'lucide-react'
 import { useAuthStore } from '../../features/auth/store/authStore'
+import { useUnreadCount } from '../../features/notifications/hooks/useNotifications'
 
 const navLinks = [
     { to: '/', icon: Home, label: 'Accueil' },
@@ -11,12 +12,15 @@ const navLinks = [
     { to: '/messages', icon: MessageCircle, label: 'Messages' },
     { to: '/favorites', icon: Heart, label: 'Favoris' },
     { to: '/business', icon: Building2, label: 'Mon entreprise' },
+    { to: '/business/products', icon: Package, label: 'Mes produits' }, // ← ajouter
     { to: '/notifications', icon: Bell, label: 'Notifications' },
     { to: '/profile', icon: User, label: 'Profil' },
 ]
 
 export default function Sidebar() {
     const { isAuthenticated, logout, user } = useAuthStore()
+
+    const unreadCount = useUnreadCount()
 
     return (
         <aside className="hidden md:flex flex-col fixed left-0 top-0 h-full w-60 bg-white border-r border-gray-200 z-50">
@@ -29,8 +33,7 @@ export default function Sidebar() {
             {/* Navigation */}
             <nav className="flex-1 px-3 py-4 space-y-1">
                 {navLinks.map(({ to, icon: Icon, label }) => {
-                    // Masquer les liens privés si non connecté
-                    const privateLinks = ['/messages', '/favorites', '/business', '/notifications', '/profile']
+                    const privateLinks = ['/messages', '/favorites', '/business', '/notifications', '/profile', '/business/products']
                     if (!isAuthenticated && privateLinks.includes(to)) return null
 
                     return (
@@ -47,6 +50,11 @@ export default function Sidebar() {
                         >
                             <Icon size={18} />
                             {label}
+                            {to === '/notifications' && unreadCount > 0 && (
+                                <span className="ml-auto w-5 h-5 bg-green-600 text-white text-xs rounded-full flex items-center justify-center">
+                                    {unreadCount}
+                                </span>
+                            )}
                         </NavLink>
                     )
                 })}

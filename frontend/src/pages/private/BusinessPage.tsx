@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import {
     Building2, Camera, Loader2, MapPin,
-    Phone, Mail, Globe, FileText, Home
+    Phone, Mail, Globe, FileText, Home, Package
 } from 'lucide-react'
 import {
     useMyEnterprise,
@@ -12,6 +12,7 @@ import {
     useUpdateEntrepriseLogo,
 } from '../../features/enterprises/hooks/useEntreprise'
 import EmptyState from '../../components/shared/EmptyState'
+import { useNavigate } from 'react-router-dom'
 
 const REGIONS = [
     'Centre', 'Hauts-Bassins', 'Cascades', 'Centre-Est', 'Centre-Nord',
@@ -55,6 +56,7 @@ export default function BusinessPage() {
             address: enterprise?.address ?? '',
         },
     })
+    const navigate = useNavigate()
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -137,6 +139,17 @@ export default function BusinessPage() {
                         Changer le logo
                     </button>
                 </div>
+            </div>
+
+            {/* Accès rapide */}
+            <div className="grid grid-cols-2 gap-3">
+                <button
+                    onClick={() => navigate('/business/products')}
+                    className="flex items-center justify-center gap-2 py-3 bg-green-50 hover:bg-green-100 text-green-700 font-semibold rounded-xl text-sm transition-colors"
+                >
+                    <Package size={16} />
+                    Mes produits
+                </button>
             </div>
 
             {/* Formulaire */}
