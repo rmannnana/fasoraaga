@@ -1,6 +1,8 @@
 import { Search, Wheat, Beef, Hammer, ShoppingBag, RefreshCw, Plane } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { searchApi } from '../../api/search.api'
 import ProductCard from '../../components/shared/ProductCard'
 import EnterpriseCard from '../../components/shared/EnterpriseCard'
 
@@ -13,48 +15,19 @@ const sectors = [
     { label: 'Export', icon: Plane, color: 'bg-red-50 text-red-700' },
 ]
 
-// Données fictives — remplacées par l'API plus tard
-const mockProducts = [
-    {
-        id: 1, name: 'Mil local de qualité supérieure', indicative_price: 15000,
-        unit: 'sac', image: null, entreprise: 'Agri Burkina',
-        localisation: 'Ouagadougou', category: 'Céréales', status: 'disponible' as const,
-    },
-    {
-        id: 2, name: 'Karité brut première pression', indicative_price: 8500,
-        unit: 'kg', image: null, entreprise: 'Coop Noix',
-        localisation: 'Bobo-Dioulasso', category: 'Oléagineux', status: 'sur_commande' as const,
-    },
-    {
-        id: 3, name: 'Sésame blanc décortiqué', indicative_price: 12000,
-        unit: 'tonne', image: null, entreprise: 'SahelExport',
-        localisation: 'Koudougou', category: 'Oléagineux', status: 'disponible' as const,
-    },
-    {
-        id: 4, name: 'Haricot niébé sec', indicative_price: 22000,
-        unit: 'sac', image: null, entreprise: 'Ferme du Plateau',
-        localisation: 'Dori', category: 'Légumineuses', status: 'disponible' as const,
-    },
-]
-
-const mockEnterprises = [
-    {
-        id: 1, name: 'Agri Burkina SARL', description: 'Producteur de céréales et légumineuses pour le marché local et sous-régional.',
-        logo: null, sector: 'Agriculture', region: 'Centre',
-    },
-    {
-        id: 2, name: 'Coop Noix du Sahel', description: 'Coopérative spécialisée dans la collecte et la transformation du karité.',
-        logo: null, sector: 'Transformation', region: 'Hauts-Bassins',
-    },
-    {
-        id: 3, name: 'SahelExport', description: 'Exportateur de produits agricoles bruts vers l\'Europe et l\'Asie.',
-        logo: null, sector: 'Export', region: 'Centre-Ouest',
-    },
-]
-
 export default function HomePage() {
     const navigate = useNavigate()
     const [search, setSearch] = useState('')
+
+    const productsQuery = useQuery({
+        queryKey: ['home', 'products'],
+        queryFn: searchApi.getRecentProducts,
+    })
+
+    const enterprisesQuery = useQuery({
+        queryKey: ['home', 'enterprises'],
+        queryFn: searchApi.getRecentEnterprises,
+    })
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
@@ -74,8 +47,6 @@ export default function HomePage() {
                 <p className="text-green-100 text-sm md:text-base max-w-xl mx-auto">
                     Découvrez des producteurs locaux, explorez leurs catalogues et établissez des partenariats durables.
                 </p>
-
-                {/* Barre de recherche */}
                 <form onSubmit={handleSearch} className="flex gap-2 max-w-lg mx-auto mt-2">
                     <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-4 py-3">
                         <Search size={18} className="text-gray-400 shrink-0" />
@@ -124,11 +95,33 @@ export default function HomePage() {
                         Voir tout
                     </button>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {mockProducts.map((product) => (
-                        <ProductCard key={product.id} {...product} />
-                    ))}
-                </div>
+
+                {productsQuery.isLoading ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {[...Array(4)].map((_, i) => (
+                            <div key={i} className="h-64 bg-gray-100 rounded-xl animate-pulse" />
+                        ))}
+                    </div>
+                ) : productsQuery.data?.results.length === 0 ? (
+                    <p className="text-sm text-gray-400">Aucun produit pour le moment.</p>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {productsQuery.data?.results.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                id={product.id}
+                                name={product.name}
+                                indicative_price={product.indicative_price}
+                                unit={product.unit}
+                                image={product.images?.[0]?.image ?? null}
+                                entreprise={product.enterprise_name}
+                                localisation={product.region}
+                                category={product.category_name}
+                                status={product.status}
+                            />
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* Entreprises à découvrir */}
@@ -136,17 +129,35 @@ export default function HomePage() {
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-bold text-gray-800">Entreprises à découvrir</h2>
                     <button
-                        onClick={() => navigate('/search?tab=entreprises')}
+                        onClick={() => navigate('/search?tab=enterprises')}
                         className="text-sm text-green-700 font-medium hover:underline"
                     >
                         Voir tout
                     </button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {mockEnterprises.map((entreprise) => (
-                        <EnterpriseCard key={entreprise.id} {...entreprise} />
-                    ))}
-                </div>
+
+                {enterprisesQuery.isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} className="h-40 bg-gray-100 rounded-xl animate-pulse" />
+                        ))}
+                    </div>
+                ) : enterprisesQuery.data?.results.length === 0 ? (
+                    <p className="text-sm text-gray-400">Aucune entreprise pour le moment.</p>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {enterprisesQuery.data?.results.map((entreprise) => (
+                            <EnterpriseCard
+                                key={entreprise.id}
+                                id={entreprise.id}
+                                name={entreprise.name}
+                                description={entreprise.description}
+                                logo={entreprise.logo}
+                                region={entreprise.region}
+                            />
+                        ))}
+                    </div>
+                )}
             </section>
 
         </div>

@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
             // Routes publiques accessibles à tous
             { path: '/', element: <HomePage /> },
             { path: '/search', element: <SearchResultsPage /> },
-            { path: '/entreprises/:id', element: <EnterpriseDetailPage /> },
+            { path: '/enterprises/:id', element: <EnterpriseDetailPage /> },
             { path: '/products/:id', element: <ProductDetailPage /> },
 
             // Route publique uniquement (redirige si connecté)

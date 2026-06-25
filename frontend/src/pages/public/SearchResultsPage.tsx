@@ -215,9 +215,9 @@ export default function SearchResultsPage() {
                                 name={product.name}
                                 indicative_price={product.indicative_price}
                                 unit={product.unit}
-                                image={product.images?.[0] ?? null}
-                                entreprise={product.entreprise_name}
-                                localisation={product.entreprise_region}
+                                image={product.images?.[0]?.image ?? null}
+                                entreprise={product.enterprise_name}
+                                localisation={product.region}
                                 category={product.category_name}
                                 status={product.status}
                             />

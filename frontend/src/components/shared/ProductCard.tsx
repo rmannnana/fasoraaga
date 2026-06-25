@@ -5,7 +5,7 @@ import Badge from '../ui/Badge'
 interface ProductCardProps {
     id: number
     name: string
-    indicative_price: number
+    indicative_price: string | number
     unit: string
     image?: string | null
     entreprise: string
@@ -25,11 +25,13 @@ export default function ProductCard({
     image, entreprise, localisation, category, status
 }: ProductCardProps) {
     const { label, color } = statusConfig[status]
+    const price = typeof indicative_price === 'string'
+        ? parseFloat(indicative_price)
+        : indicative_price
 
     return (
         <Link to={`/products/${id}`} className="block group">
             <div className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
-                {/* Image */}
                 <div className="relative h-44 bg-gray-100">
                     {image ? (
                         <img src={image} alt={name} className="w-full h-full object-cover" />
@@ -38,7 +40,6 @@ export default function ProductCard({
                             Pas d'image
                         </div>
                     )}
-                    {/* Bouton favori */}
                     <button
                         onClick={(e) => e.preventDefault()}
                         className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow hover:text-red-500 transition-colors"
@@ -47,14 +48,13 @@ export default function ProductCard({
                     </button>
                 </div>
 
-                {/* Contenu */}
                 <div className="p-3 space-y-1.5">
                     {category && <Badge label={category} color="gray" />}
                     <h3 className="font-semibold text-gray-900 text-sm group-hover:text-green-700 transition-colors line-clamp-1">
                         {name}
                     </h3>
                     <p className="text-green-700 font-bold text-sm">
-                        {indicative_price.toLocaleString('fr-FR')} FCFA
+                        {price.toLocaleString('fr-FR')} FCFA
                         <span className="text-gray-400 font-normal"> / {unit}</span>
                     </p>
                     <div className="flex items-center justify-between pt-1">

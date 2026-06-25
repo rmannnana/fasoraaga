@@ -15,7 +15,7 @@ export default function EnterpriseCard({
     id, name, description, logo, sector, region
 }: EnterpriseCardProps) {
     return (
-        <Link to={`/entreprises/${id}`} className="block group">
+        <Link to={`/enterprises/${id}`} className="block group">
             <div className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md transition-shadow space-y-3">
                 {/* En-tête */}
                 <div className="flex items-start gap-3">

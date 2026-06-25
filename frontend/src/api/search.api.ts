@@ -13,4 +13,18 @@ export const searchApi = {
         const { data } = await axiosInstance.get('/enterprises/', { params: filters })
         return data
     },
+
+    getRecentProducts: async (): Promise<PaginatedResponse<Product>> => {
+        const { data } = await axiosInstance.get('/products/', {
+            params: { ordering: '-created_at', page_size: 4 }
+        })
+        return data
+    },
+
+    getRecentEnterprises: async (): Promise<PaginatedResponse<Entreprise>> => {
+        const { data } = await axiosInstance.get('/enterprises/', {
+            params: { ordering: '-created_at', page_size: 3 }
+        })
+        return data
+    },
 }
